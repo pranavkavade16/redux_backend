@@ -4,6 +4,7 @@ const app = express();
 
 const { initializeDatabase } = require("./db/db.connect");
 const { Student } = require("./models/students.model");
+const { Mongoose } = require("mongoose");
 
 app.use(express.json());
 app.use(cors());
@@ -71,15 +72,24 @@ app.post("/students/:id", async (req, res) => {
 app.delete("/students/delete/:id", async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        error: "Invalid student ID.",
+      });
+    }
+
     const deletedStudent = await Student.findByIdAndDelete(id);
 
-    if (deletedStudent) {
-      res.status(200).json({ message: "Student deleted successfully." });
-    } else {
-      res
-        .status(404)
-        .json({ error: `Student with ID ${studentId} not found.` });
+    if (!deletedStudent) {
+      return res.status(404).json({
+        error: `Student with ID ${id} not found.`,
+      });
     }
+    res.status(200).json({
+      message: "Student deleted successfully.",
+      deletedStudent,
+    });
   } catch (error) {
     res
       .status(500)
