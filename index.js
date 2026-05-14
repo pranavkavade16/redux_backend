@@ -4,7 +4,7 @@ const app = express();
 
 const { initializeDatabase } = require("./db/db.connect");
 const { Student } = require("./models/students.model");
-const { Mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 
 app.use(express.json());
 app.use(cors());
