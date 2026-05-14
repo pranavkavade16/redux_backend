@@ -70,8 +70,8 @@ app.post("/students/:id", async (req, res) => {
 
 app.delete("/students/delete/:id", async (req, res) => {
   try {
-    const { studentId } = req.params;
-    const deletedStudent = await Student.findByIdAndDelete(studentId);
+    const { id } = req.params;
+    const deletedStudent = await Student.findByIdAndDelete(id);
 
     if (deletedStudent) {
       res.status(200).json({ message: "Student deleted successfully." });
